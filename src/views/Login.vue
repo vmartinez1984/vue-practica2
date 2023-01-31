@@ -9,7 +9,7 @@
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="staticEmail" v-model="usuario">
+                                <input type="text" class="form-control" id="staticEmail" v-model="usuario" focus>
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -45,21 +45,27 @@ export default {
     methods:{
         async iniciarSesionAsync(){
             var url
+            var response1
             var data ={
                 userName : this.usuario
                 , password: this.contrasenia
             }
 
-            console.log(data)
+            //console.log(data)
             url = urlBase.urlApi +'/Auth'
-            var response1 = await this.axios.post(url, data)
+            await this.axios.post(url, data)
             .then(response=> {
-                return response
+                response1 = response     
+                this.$store.commit('login')
+                this.$store.commit('setToken', response.data)
             })
             .catch(error => {
                 alert(error.response.data)
             })
-            console.log(response1.data)
+            // if(response1.status == 200){
+            //     this.$store.commit('login')
+            // }
+            console.log(response1)
         }
     }
 }
